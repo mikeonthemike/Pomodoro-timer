@@ -1,6 +1,7 @@
   import React, { useState, useEffect } from 'react';
   import { FaCog } from 'react-icons/fa';
 import SettingsModal, { SettingsButton } from './components/Settings';
+import TaskManager from './components/TaskManager';
   import './App.css';
 
 
@@ -15,6 +16,7 @@ function App() {
   const [sessionsBeforeLongBreak, setSessionsBeforeLongBreak] = useState(4);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [completedSessions, setCompletedSessions] = useState(0);
+  const [currentTask, setCurrentTask] = useState(null);
 
   useEffect(() => {
     let interval = null;
@@ -49,6 +51,7 @@ function App() {
     }
     return () => clearInterval(interval);
   }, [isActive, minutes, seconds, mode, workDuration, breakDuration, longBreakDuration, completedSessions, sessionsBeforeLongBreak]);
+
 
   const toggleTimer = () => {
     setIsActive(!isActive);
@@ -85,47 +88,69 @@ function App() {
     setSessionsBeforeLongBreak(newValue);
   };
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold mb-8">Pomodoro Timer</h1>
-      <div className="text-6xl font-mono mb-8">
-        {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+const handleTaskSelect = (task) => {
+  setCurrentTask(task);
+  if (task && mode !== 'work') {
+    setMode('work');
+    setMinutes(workDuration);
+    setSeconds(0);
+  }
+};
+
+return (
+  <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4">
+    <h1 className="text-4xl font-bold mb-8">Pomodoro Timer</h1>
+    <div className="flex flex-col md:flex-row w-full max-w-4xl">
+      <div className="w-full md:w-1/2 mb-8 md:mb-0 md:mr-4">
+        <div className="text-6xl font-mono mb-8">
+          {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+        </div>
+        <div className="space-x-4 mb-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={toggleTimer}
+          >
+            {isActive ? 'Pause' : 'Start'}
+          </button>
+          <button
+            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+            onClick={resetTimer}
+          >
+            Reset
+          </button>
+        </div>
+        <p className="mt-4 text-xl mb-4">
+          Current mode: {mode === 'work' ? 'Work' : (mode === 'break' ? 'Short Break' : 'Long Break')}
+        </p>
+        <p className="text-xl mb-4">
+          Completed work sessions: {completedSessions}
+        </p>
+        {currentTask && (
+          <div className="mt-4 p-4 bg-white rounded shadow">
+            <h3 className="font-bold">Current Task:</h3>
+            <p>{currentTask.content}</p>
+          </div>
+        )}
+        <SettingsButton onClick={() => setIsSettingsOpen(true)} />
       </div>
-      <div className="space-x-4 mb-4">
-        <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={toggleTimer}
-        >
-          {isActive ? 'Pause' : 'Start'}
-        </button>
-        <button
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-          onClick={resetTimer}
-        >
-          Reset
-        </button>
+      <div className="w-full md:w-1/2">
+        <TaskManager onTaskSelect={handleTaskSelect} />
       </div>
-      <p className="mt-4 text-xl mb-4">
-        Current mode: {mode === 'work' ? 'Work' : (mode === 'break' ? 'Short Break' : 'Long Break')}
-      </p>
-      <p className="text-xl mb-4">
-        Completed work sessions: {completedSessions}
-      </p>
-      <SettingsButton onClick={() => setIsSettingsOpen(true)} />
-      <SettingsModal
-        isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
-        workDuration={workDuration}
-        breakDuration={breakDuration}
-        longBreakDuration={longBreakDuration}
-        sessionsBeforeLongBreak={sessionsBeforeLongBreak}
-        onWorkDurationChange={handleWorkDurationChange}
-        onBreakDurationChange={handleBreakDurationChange}
-        onLongBreakDurationChange={handleLongBreakDurationChange}
-        onSessionsBeforeLongBreakChange={handleSessionsBeforeLongBreakChange}
-      />
     </div>
-  );
+    <SettingsModal
+      isOpen={isSettingsOpen}
+      onClose={() => setIsSettingsOpen(false)}
+      workDuration={workDuration}
+      breakDuration={breakDuration}
+      longBreakDuration={longBreakDuration}
+      sessionsBeforeLongBreak={sessionsBeforeLongBreak}
+      onWorkDurationChange={handleWorkDurationChange}
+      onBreakDurationChange={handleBreakDurationChange}
+      onLongBreakDurationChange={handleLongBreakDurationChange}
+      onSessionsBeforeLongBreakChange={handleSessionsBeforeLongBreakChange}
+    />
+  </div>
+);
 }
 
 export default App;
