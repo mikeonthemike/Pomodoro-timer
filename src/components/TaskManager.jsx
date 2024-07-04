@@ -2,43 +2,63 @@ import React, { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 function TaskManager({ onTaskSelect }) {
-  const [tasks, setTasks] = useState([]);
+  const [activeTasks, setActiveTasks] = useState([]);
+  const [completedTasks, setCompletedTasks] = useState([]);
   const [newTask, setNewTask] = useState('');
   const [currentTask, setCurrentTask] = useState(null);
 
   const addTask = (e) => {
     e.preventDefault();
     if (newTask.trim()) {
-      setTasks([...tasks, { id: Date.now().toString(), content: newTask }]);
+      setActiveTasks(prevTasks => [...prevTasks, { id: Date.now().toString(), content: newTask }]);
       setNewTask('');
     }
   };
 
   const onDragEnd = (result) => {
-    if (!result.destination) return;
-    const items = Array.from(tasks);
-    const [reorderedItem] = items.splice(result.source.index, 1);
-    items.splice(result.destination.index, 0, reorderedItem);
-    setTasks(items);
+    const { source, destination } = result;
+
+    if (!destination) return;
+
+    const sourceList = source.droppableId === 'activeTasks' ? activeTasks : completedTasks;
+    const destList = destination.droppableId === 'activeTasks' ? activeTasks : completedTasks;
+
+    const [removed] = sourceList.splice(source.index, 1);
+    destList.splice(destination.index, 0, removed);
+
+    if (source.droppableId === 'activeTasks') {
+      setActiveTasks([...sourceList]);
+    } else {
+      setCompletedTasks([...sourceList]);
+    }
+
+    if (destination.droppableId === 'activeTasks') {
+      setActiveTasks([...destList]);
+    } else {
+      setCompletedTasks([...destList]);
+    }
   };
 
   const selectTask = () => {
-    if (tasks.length > 0) {
-      const selectedTask = tasks[0];
+    if (activeTasks.length > 0) {
+      const [selectedTask, ...remainingTasks] = activeTasks;
       setCurrentTask(selectedTask);
-      setTasks(tasks.slice(1));
+      setActiveTasks(remainingTasks);
       onTaskSelect(selectedTask);
     }
   };
 
   const completeTask = () => {
-    setCurrentTask(null);
-    onTaskSelect(null);
+    if (currentTask) {
+      setCompletedTasks(prevTasks => [currentTask, ...prevTasks]);
+      setCurrentTask(null);
+      onTaskSelect(null);
+    }
   };
 
   const returnTaskToList = () => {
     if (currentTask) {
-      setTasks([currentTask, ...tasks]);
+      setActiveTasks(prevTasks => [currentTask, ...prevTasks]);
       setCurrentTask(null);
       onTaskSelect(null);
     }
@@ -58,27 +78,57 @@ function TaskManager({ onTaskSelect }) {
       </form>
 
       <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="tasks">
-          {(provided) => (
-            <ul {...provided.droppableProps} ref={provided.innerRef} className="bg-gray-100 p-4 rounded">
-              {tasks.map((task, index) => (
-                <Draggable key={task.id} draggableId={task.id} index={index}>
-                  {(provided) => (
-                    <li
-                      ref={provided.innerRef}
-                      {...provided.draggableProps}
-                      {...provided.dragHandleProps}
-                      className="bg-white p-2 mb-2 rounded shadow"
-                    >
-                      {task.content}
-                    </li>
-                  )}
-                </Draggable>
-              ))}
-              {provided.placeholder}
-            </ul>
-          )}
-        </Droppable>
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="w-full md:w-1/2">
+            <h3 className="font-bold mb-2">Active Tasks</h3>
+            <Droppable droppableId="activeTasks">
+              {(provided) => (
+                <ul {...provided.droppableProps} ref={provided.innerRef} className="bg-gray-100 p-4 rounded min-h-[100px]">
+                  {activeTasks.map((task, index) => (
+                    <Draggable key={task.id} draggableId={task.id} index={index}>
+                      {(provided) => (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="bg-white p-2 mb-2 rounded shadow"
+                        >
+                          {task.content}
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </div>
+
+          <div className="w-full md:w-1/2">
+            <h3 className="font-bold mb-2">Completed Tasks</h3>
+            <Droppable droppableId="completedTasks">
+              {(provided) => (
+                <ul {...provided.droppableProps} ref={provided.innerRef} className="bg-gray-100 p-4 rounded min-h-[100px]">
+                  {completedTasks.map((task, index) => (
+                    <Draggable key={task.id} draggableId={task.id} index={index}>
+                      {(provided) => (
+                        <li
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                          className="bg-white p-2 mb-2 rounded shadow line-through"
+                        >
+                          {task.content}
+                        </li>
+                      )}
+                    </Draggable>
+                  ))}
+                  {provided.placeholder}
+                </ul>
+              )}
+            </Droppable>
+          </div>
+        </div>
       </DragDropContext>
 
       {currentTask ? (
