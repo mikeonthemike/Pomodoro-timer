@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 function TaskManager({ onTaskSelect }) {
   const [activeTasks, setActiveTasks] = useState([]);
@@ -80,7 +80,7 @@ function TaskManager({ onTaskSelect }) {
       <DragDropContext onDragEnd={onDragEnd}>
         <div className="flex flex-col md:flex-row gap-4">
           <div className="w-full md:w-1/2">
-            <h3 className="font-bold mb-2">Active Tasks</h3>
+            <h3 className="font-bold mb-2"> Tasks to Complete</h3>
             <Droppable droppableId="activeTasks">
               {(provided) => (
                 <ul {...provided.droppableProps} ref={provided.innerRef} className="bg-gray-100 p-4 rounded min-h-[100px]">
