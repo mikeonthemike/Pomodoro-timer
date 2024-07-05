@@ -132,7 +132,7 @@ function TaskManager({ onTaskSelect }) {
       </DragDropContext>
 
       {currentTask ? (
-        <div className="mt-4">
+        <div className="mt-4 p-4 bg-white rounded shadow">
           <h3 className="font-bold">Current Task:</h3>
           <p>{currentTask.content}</p>
           <button onClick={completeTask} className="mt-2 bg-green-500 text-white p-2 rounded mr-2">Complete</button>

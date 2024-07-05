@@ -129,6 +129,7 @@ return (
           <div className="mt-4 p-4 bg-white rounded shadow">
             <h3 className="font-bold">Current Task:</h3>
             <p>{currentTask.content}</p>
+
           </div>
         )}
         <SettingsButton onClick={() => setIsSettingsOpen(true)} />
