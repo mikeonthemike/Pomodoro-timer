@@ -50,3 +50,7 @@ Runs the Vite dev server with hot reload on [http://localhost:5173](http://local
 - **Testing:** Vitest + React Testing Library
 - **Linting:** ESLint 9 (flat config)
 - **Type Checking:** TypeScript (checkJs)
+
+## License
+
+ISC License. See [LICENSE](LICENSE) for details.
