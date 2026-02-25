@@ -22,6 +22,7 @@ This repo is a **Pomodoro Timer with Task Manager** built as a client-side React
 - **Typecheck:** `npm run typecheck` (`tsc --noEmit`)
 - **Build:** `npm run build` (runs lint + typecheck + `vite build`)
 - **Preview:** `npm run preview` (serves `dist/`)
+- See `README.md` for general project context and Docker instructions.
 
 ## Code map
 
