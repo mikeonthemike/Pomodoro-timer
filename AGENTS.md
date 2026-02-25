@@ -1,42 +1,52 @@
 ## Cursor Cloud specific instructions
 
-This is a **Pomodoro Timer with Task Manager** — a client-side React SPA built with Vite and Tailwind CSS. There is no backend, database, or authentication.
+This repo is a **Pomodoro Timer with Task Manager** built as a client-side React SPA using Vite and Tailwind CSS.
 
-### Services
+## Project facts
+
+- Frontend-only application (no backend, database, or auth).
+- No environment variables or secrets are required.
+- Primary runtime state is client-side React state.
+
+## Services
 
 | Service | Command | Port | Notes |
-|---------|---------|------|-------|
-| Vite Dev Server | `npm run dev` | 5173 | The only service; serves the app with HMR |
+| --- | --- | --- | --- |
+| Vite dev server | `npm run dev` | 5173 | Serves app with HMR |
 
-### Key notes
+## Commands
 
-- **Lint:** `npm run lint` runs ESLint 9 (flat config in `eslint.config.js`) with recommended rules + React Hooks + React Refresh.
-- **Type check:** `npm run typecheck` runs `tsc --noEmit`. The `tsconfig.json` has `allowJs: true` and `checkJs: true` so it type-checks `.jsx` files. `noImplicitAny` is disabled since source is JS without full type annotations; strict null checks are active.
-- **Build:** `npm run build` runs lint, then typecheck, then `vite build`. All three must pass.
-- **Test:** `npm test` runs Vitest (22 tests across App, TaskManager, Settings). `npm run test:watch` runs in watch mode. Tests use React Testing Library + jsdom. Config is in `vite.config.js` under `test`.
-- **No environment variables or secrets required.** All state is in-memory React state.
-- **Preview production build:** `npm run preview` serves the built `dist/` folder.
-- See `README.md` for general project context (Replit-oriented).
+- **Dev:** `npm run dev`
+- **Test:** `npm test` (Vitest), `npm run test:watch`
+- **Lint:** `npm run lint` (ESLint flat config in `eslint.config.js`)
+- **Typecheck:** `npm run typecheck` (`tsc --noEmit`)
+- **Build:** `npm run build` (runs lint + typecheck + `vite build`)
+- **Preview:** `npm run preview` (serves `dist/`)
 
-### Agent workflow
+## Code map
 
-Follow this loop for every change. Keep each iteration small and commit frequently.
+- `src/App.jsx`: main application shell and feature composition.
+- `src/components/TaskManager.jsx`: task CRUD and list behavior.
+- `src/components/Settings.jsx`: timer and app settings UI.
+- `src/test/*.test.jsx`: React Testing Library + Vitest coverage.
 
-1. **Plan** — Scope the change to the smallest useful unit. Write down what will change and why before touching code.
-2. **Implement** — Make the change. Touch only what the plan calls for.
-3. **Test** — Run all checks and verify behavior:
-   - `npm test` — must pass with 0 failures.
-   - `npm run lint` — must pass with 0 errors.
-   - `npm run typecheck` — must pass with 0 errors.
-   - `npm run build` — must complete successfully (runs lint + typecheck + vite build).
-   - If the change affects UI, start the dev server (`npm run dev`) and verify in the browser.
-4. **Review** — Re-read the diff (`git diff`). Confirm no unrelated changes, no leftover debug code, and no regressions.
-5. **Commit & push** — Stage and commit with a clear message, then push:
-   ```
-   git add -A
-   git diff --cached --stat   # sanity-check what's staged
-   git commit -m "<concise description>"
-   git push -u origin <branch>
-   ```
+## Agent workflow
 
-Repeat from step 1 for the next change. Never batch unrelated changes into one commit.
+Use this loop for each change, keeping diffs small and focused:
+
+1. **Plan**: define the smallest useful scope before editing.
+2. **Implement**: touch only files needed for the scoped change.
+3. **Test**:
+   - `npm test`
+   - `npm run lint`
+   - `npm run typecheck`
+   - `npm run build`
+   - If UI is affected, run `npm run dev` and verify behavior in browser.
+4. **Review**: run `git diff` and confirm no unrelated edits or debug leftovers.
+5. **Commit & push**:
+   - `git add -A`
+   - `git diff --cached --stat`
+   - `git commit -m "<concise description>"`
+   - `git push -u origin <branch>`
+
+Repeat this loop for each additional scoped change. Do not batch unrelated work into one commit.
