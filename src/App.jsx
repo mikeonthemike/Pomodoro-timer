@@ -1,5 +1,4 @@
-  import React, { useState, useEffect } from 'react';
-  import { FaCog } from 'react-icons/fa';
+  import { useState, useEffect } from 'react';
 import SettingsModal, { SettingsButton } from './components/Settings';
 import TaskManager from './components/TaskManager';
   import './App.css';
@@ -16,10 +15,11 @@ function App() {
   const [sessionsBeforeLongBreak, setSessionsBeforeLongBreak] = useState(4);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [completedSessions, setCompletedSessions] = useState(0);
-  const [currentTask, setCurrentTask] = useState(null);
+  const [currentTask, setCurrentTask] = useState(/** @type {{id: string, content: string} | null} */ (null));
 
   useEffect(() => {
-    let interval = null;
+    /** @type {ReturnType<typeof setInterval> | undefined} */
+    let interval;
     if (isActive) {
       interval = setInterval(() => {
         if (seconds > 0) {

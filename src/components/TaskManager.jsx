@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
+/** @typedef {{id: string, content: string}} Task */
+
 function TaskManager({ onTaskSelect }) {
-  const [activeTasks, setActiveTasks] = useState([]);
-  const [completedTasks, setCompletedTasks] = useState([]);
+  const [activeTasks, setActiveTasks] = useState(/** @type {Task[]} */ ([]));
+  const [completedTasks, setCompletedTasks] = useState(/** @type {Task[]} */ ([]));
   const [newTask, setNewTask] = useState('');
-  const [currentTask, setCurrentTask] = useState(null);
+  const [currentTask, setCurrentTask] = useState(/** @type {Task | null} */ (null));
 
   const addTask = (e) => {
     e.preventDefault();

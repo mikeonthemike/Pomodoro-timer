@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { FaCog } from 'react-icons/fa';
 
 function SettingsModal({ isOpen, onClose, workDuration, breakDuration, longBreakDuration, sessionsBeforeLongBreak, onWorkDurationChange, onBreakDurationChange, onLongBreakDurationChange, onSessionsBeforeLongBreakChange }) {
