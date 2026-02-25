@@ -1,9 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 
 /** @typedef {{id: string, content: string}} Task */
 
-function TaskManager({ onTaskSelect }) {
+/**
+ * @param {Object} props
+ * @param {(task: Task | null) => void} props.onTaskSelect
+ * @param {(handlers: { completeAndNext: () => void; selectNext: () => void }) => void} [props.onRegisterFocusHandlers]
+ */
+function TaskManager({ onTaskSelect, onRegisterFocusHandlers }) {
   const [activeTasks, setActiveTasks] = useState(/** @type {Task[]} */ ([]));
   const [completedTasks, setCompletedTasks] = useState(/** @type {Task[]} */ ([]));
   const [newTask, setNewTask] = useState('');
@@ -65,6 +70,35 @@ function TaskManager({ onTaskSelect }) {
       onTaskSelect(null);
     }
   };
+
+  // Register focus mode handlers so App can complete/select tasks when in focus mode
+  const completeAndNext = useCallback(() => {
+    if (currentTask) {
+      setCompletedTasks(prevTasks => [currentTask, ...prevTasks]);
+      if (activeTasks.length > 0) {
+        const [selectedTask, ...remainingTasks] = activeTasks;
+        setCurrentTask(selectedTask);
+        setActiveTasks(remainingTasks);
+        onTaskSelect(selectedTask);
+      } else {
+        setCurrentTask(null);
+        onTaskSelect(null);
+      }
+    }
+  }, [currentTask, activeTasks, onTaskSelect]);
+
+  const selectNext = useCallback(() => {
+    if (activeTasks.length > 0) {
+      const [selectedTask, ...remainingTasks] = activeTasks;
+      setCurrentTask(selectedTask);
+      setActiveTasks(remainingTasks);
+      onTaskSelect(selectedTask);
+    }
+  }, [activeTasks, onTaskSelect]);
+
+  useEffect(() => {
+    onRegisterFocusHandlers?.({ completeAndNext, selectNext });
+  }, [onRegisterFocusHandlers, completeAndNext, selectNext]);
 
   return (
     <div className="w-full max-w-md">
