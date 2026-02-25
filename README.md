@@ -1,17 +1,52 @@
-## Running React on Replit
+# Pomodoro Timer
 
-[React](https://reactjs.org/) is a popular JavaScript library for building user interfaces.
+A productivity app combining a Pomodoro technique countdown timer with a drag-and-drop task manager. Built with React, Vite, and Tailwind CSS.
 
-[Vite](https://vitejs.dev/) is a blazing fast frontend build tool that includes features like Hot Module Reloading (HMR), optimized builds, and TypeScript support out of the box.
+## Getting Started
 
-Using the two in conjunction is one of the fastest ways to build a web app.
+```bash
+npm install
+npm run dev
+```
 
-### Getting Started
-- Hit run
-- Edit [App.jsx](#src/App.jsx) and watch it live update!
+Open [http://localhost:5173](http://localhost:5173).
 
-By default, Replit runs the `dev` script, but you can configure it by changing the `run` field in the [configuration file](#.replit). Here are the vite docs for [serving production websites](https://vitejs.dev/guide/build.html)
+## Scripts
 
-### Typescript
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start dev server with HMR (port 5173) |
+| `npm run build` | Lint + typecheck + production build |
+| `npm run preview` | Serve the production build locally |
+| `npm test` | Run tests once |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript type checking |
 
-Just rename any file from `.jsx` to `.tsx`. You can also try our [TypeScript Template](https://replit.com/@replit/React-TypeScript)
+## Docker
+
+### Production
+
+```bash
+docker compose up app
+```
+
+Serves the production build via nginx on [http://localhost:8080](http://localhost:8080).
+
+### Development
+
+```bash
+docker compose up dev
+```
+
+Runs the Vite dev server with hot reload on [http://localhost:5173](http://localhost:5173).
+
+## Tech Stack
+
+- **UI:** React 18
+- **Build:** Vite 5
+- **CSS:** Tailwind CSS 3
+- **Drag & Drop:** @hello-pangea/dnd
+- **Testing:** Vitest + React Testing Library
+- **Linting:** ESLint 9 (flat config)
+- **Type Checking:** TypeScript (checkJs)
