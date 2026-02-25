@@ -16,7 +16,7 @@ This is a **Pomodoro Timer with Task Manager** — a client-side React SPA built
 - **Test:** `npm test` runs Vitest (22 tests across App, TaskManager, Settings). `npm run test:watch` runs in watch mode. Tests use React Testing Library + jsdom. Config is in `vite.config.js` under `test`.
 - **No environment variables or secrets required.** All state is in-memory React state.
 - **Preview production build:** `npm run preview` serves the built `dist/` folder.
-- See `README.md` for general project context (Replit-oriented).
+- See `README.md` for general project context and Docker instructions.
 
 ### Agent workflow
 
