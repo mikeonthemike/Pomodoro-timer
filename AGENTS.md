@@ -13,7 +13,7 @@ This is a **Pomodoro Timer with Task Manager** — a client-side React SPA built
 - **Lint:** `npm run lint` runs ESLint 9 (flat config in `eslint.config.js`) with recommended rules + React Hooks + React Refresh.
 - **Type check:** `npm run typecheck` runs `tsc --noEmit`. The `tsconfig.json` has `allowJs: true` and `checkJs: true` so it type-checks `.jsx` files. `noImplicitAny` is disabled since source is JS without full type annotations; strict null checks are active.
 - **Build:** `npm run build` runs lint, then typecheck, then `vite build`. All three must pass.
-- **No test framework configured.** There are no automated tests.
+- **Test:** `npm test` runs Vitest (22 tests across App, TaskManager, Settings). `npm run test:watch` runs in watch mode. Tests use React Testing Library + jsdom. Config is in `vite.config.js` under `test`.
 - **No environment variables or secrets required.** All state is in-memory React state.
 - **Preview production build:** `npm run preview` serves the built `dist/` folder.
 - See `README.md` for general project context (Replit-oriented).
@@ -25,6 +25,7 @@ Follow this loop for every change. Keep each iteration small and commit frequent
 1. **Plan** — Scope the change to the smallest useful unit. Write down what will change and why before touching code.
 2. **Implement** — Make the change. Touch only what the plan calls for.
 3. **Test** — Run all checks and verify behavior:
+   - `npm test` — must pass with 0 failures.
    - `npm run lint` — must pass with 0 errors.
    - `npm run typecheck` — must pass with 0 errors.
    - `npm run build` — must complete successfully (runs lint + typecheck + vite build).
