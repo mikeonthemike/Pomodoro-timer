@@ -125,4 +125,19 @@ describe('App – timer logic', () => {
     expect(screen.getByText(/Current mode:.*Work/)).toBeInTheDocument();
     expect(screen.getByText('25:00')).toBeInTheDocument();
   });
+
+  it('enters focus mode and timer keeps running when exiting', () => {
+    render(<App />);
+
+    fireEvent.click(screen.getByText('Start'));
+    tickSeconds(3);
+
+    fireEvent.click(screen.getByText('Enter focus mode'));
+    expect(screen.getByText('Exit focus mode')).toBeInTheDocument();
+
+    fireEvent.click(screen.getByText('Exit focus mode'));
+    expect(screen.getByText('Enter focus mode')).toBeInTheDocument();
+    // Timer kept running (no pause/reset on exit) - still counting from 24:57
+    expect(screen.getByText('24:57')).toBeInTheDocument();
+  });
 });
